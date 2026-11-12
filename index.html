@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Getting Started with Cost Plus Drugs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1f3a5f; --teal:#2a7f7a; --teal-soft:#e6f2f1; --cream:#fbf8f3;
+    --ink:#1d2430; --muted:#4a5565; --line:#d6dbe2; --warn:#fff5e0; --warn-line:#e5b552;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--cream);color:var(--ink);
+    font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif;font-size:20px;line-height:1.55}
+  .wrap{max-width:860px;margin:0 auto;padding:24px 18px 60px}
+  header{background:var(--navy);color:#fff;border-radius:14px;padding:28px 26px;margin-bottom:22px}
+  header h1{margin:0 0 8px;font-size:1.7em;line-height:1.2}
+  header p{margin:0;font-size:1.02em;opacity:.95}
+  .size{display:flex;gap:10px;align-items:center;margin-top:16px;flex-wrap:wrap}
+  .size button{background:#fff;color:var(--navy);border:0;border-radius:8px;padding:8px 14px;font:inherit;font-size:.85em;font-weight:700;cursor:pointer}
+  .progress{background:#fff;border:2px solid var(--line);border-radius:12px;padding:16px 20px;margin-bottom:22px}
+  .bar{height:16px;background:#e9edf2;border-radius:10px;overflow:hidden;margin-top:8px}
+  .bar span{display:block;height:100%;background:var(--teal);width:0;transition:width .3s}
+  .step{background:#fff;border:2px solid var(--line);border-radius:14px;margin-bottom:16px;overflow:hidden}
+  .step.done{border-color:var(--teal)}
+  .step > button.head{width:100%;text-align:left;background:none;border:0;padding:18px 20px;font:inherit;cursor:pointer;display:flex;gap:14px;align-items:center;color:var(--ink)}
+  .num{flex:none;width:44px;height:44px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.05em}
+  .step.done .num{background:var(--teal)}
+  .head h2{margin:0;font-size:1.15em;line-height:1.25}
+  .head small{display:block;color:var(--muted);font-size:.8em;font-weight:400}
+  .chev{margin-left:auto;font-size:1.2em;color:var(--muted)}
+  .body{padding:0 22px 22px;display:none}
+  .step.open .body{display:block}
+  .step.open .chev{transform:rotate(90deg)}
+  h3{font-size:1.02em;margin:18px 0 6px;color:var(--navy)}
+  ul.check{list-style:none;padding:0;margin:8px 0}
+  ul.check li{margin:8px 0}
+  ul.check label{display:flex;gap:12px;align-items:flex-start;cursor:pointer}
+  input[type=checkbox]{width:28px;height:28px;flex:none;margin-top:2px;accent-color:var(--teal)}
+  .script{background:var(--teal-soft);border-left:6px solid var(--teal);border-radius:8px;padding:14px 16px;margin:10px 0;font-size:1.02em}
+  .note{background:var(--warn);border-left:6px solid var(--warn-line);border-radius:8px;padding:14px 16px;margin:12px 0}
+  .btn{display:inline-block;background:var(--teal);color:#fff;border:0;border-radius:10px;padding:13px 20px;font:inherit;font-weight:700;cursor:pointer;text-decoration:none;margin:6px 8px 6px 0}
+  .btn.secondary{background:#fff;color:var(--navy);border:2px solid var(--navy)}
+  .btn.done-btn{background:var(--navy)}
+  a{color:var(--teal)}
+  textarea,input[type=text],input[type=number]{width:100%;font:inherit;font-size:.95em;padding:10px 12px;border:2px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
+  textarea{min-height:90px}
+  table{width:100%;border-collapse:collapse;margin-top:10px;font-size:.88em}
+  th,td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:left;vertical-align:top}
+  th{color:var(--navy)}
+  .medform{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+  .medform label{font-size:.85em;font-weight:700;color:var(--muted)}
+  .medform .full{grid-column:1/-1}
+  .diff-low{color:#1d6b3a;font-weight:700}.diff-high{color:#8a4b00;font-weight:700}
+  .rm{background:none;border:0;color:#a33;font:inherit;font-size:.85em;cursor:pointer;text-decoration:underline}
+  footer{margin-top:30px;background:#fff;border:2px solid var(--line);border-radius:14px;padding:22px}
+  footer h2{margin:0 0 6px;font-size:1.15em;color:var(--navy)}
+  .small{font-size:.85em;color:var(--muted)}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--navy);color:#fff;padding:12px 20px;border-radius:10px;display:none;z-index:9}
+  #copyBox{display:none;margin-top:10px}
+  @media (max-width:600px){ body{font-size:18px} .medform{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Getting Started with Cost Plus Drugs</h1>
+  <p>A plain-language, step-by-step guide for seniors, the sandwich generation, and the families helping them. Take it one step at a time. Your checkmarks and notes stay on this device.</p>
+  <div class="size">
+    <span>Text size:</span>
+    <button type="button" data-size="18">A</button>
+    <button type="button" data-size="21">A+</button>
+    <button type="button" data-size="25">A++</button>
+  </div>
+</header>
+
+<div class="step open" style="border-color:var(--teal);padding:20px 22px">
+  <h2 style="margin:0 0 8px;font-size:1.2em;color:var(--navy)">Start here</h2>
+  <p style="margin:0 0 8px">You do not have to do this all at once. Do one step, then come back another day if you like.</p>
+  <p style="margin:0 0 6px"><strong>Have these 3 things nearby:</strong></p>
+  <ul style="margin:0 0 10px">
+    <li>Your pill bottles (or a list of your medicines)</li>
+    <li>Your insurance or drug plan card, if you have one</li>
+    <li>A phone</li>
+  </ul>
+  <p style="margin:0">Tap a step below to open it. When you finish a step, tap the big button at the bottom of it. The next step will open for you.</p>
+</div>
+
+<div class="progress">
+  <strong id="progText">0 of 6 steps done</strong>
+  <div class="bar"><span id="progBar"></span></div>
+</div>
+
+<!-- STEP 1 -->
+<section class="step" data-step="1">
+  <button class="head" type="button"><span class="num">1</span><h2>Learn what Cost Plus Drugs is<small>About 3 minutes</small></h2><span class="chev">&#9656;</span></button>
+  <div class="body">
+    <p>Cost Plus Drugs (full name: Mark Cuban Cost Plus Drug Company) is an online pharmacy. It mails prescription medicines to your home. It shows you exactly how each price is figured, so there are no surprises.</p>
+    <h3>Good to know</h3>
+    <ul>
+      <li>It is mail order. Medicines come in the mail, not from a store counter.</li>
+      <li>You do not need insurance to use it. You can pay the posted price.</li>
+      <li>It works with some insurance plans, but not all.</li>
+      <li>Your doctor still has to send a prescription.</li>
+      <li>You must be 18 or older to make an account.</li>
+    </ul>
+    <div class="note"><strong>If you have Medicare drug coverage (Part D or a Medicare Advantage plan with drug coverage):</strong> a lower price is not always a lower total. Sometimes your plan copay is cheaper. And if you pay cash outside your plan, ask your plan whether that purchase counts toward your deductible and yearly out-of-pocket limit. Step 2 and Step 3 help you check both.</div>
+    <button class="btn done-btn" type="button" data-done>I understand, mark this step done</button>
+  </div>
+</section>
+
+<!-- STEP 2 -->
+<section class="step" data-step="2">
+  <button class="head" type="button"><span class="num">2</span><h2>Compare prices for your medicines<small>About 10 to 20 minutes</small></h2><span class="chev">&#9656;</span></button>
+  <div class="body">
+    <p>Have your pill bottles or your medicine list nearby. For each medicine, write down what you pay now, then look up the Cost Plus price.</p>
+    <ol>
+      <li>Open <a href="https://costplusdrugs.com" target="_blank" rel="noopener">costplusdrugs.com</a> (opens in a new window).</li>
+      <li>Type the medicine name in the search box. Generic names work best (for example, "atorvastatin" instead of "Lipitor").</li>
+      <li>Pick the same strength (like 20 mg) and the same number of pills you get now.</li>
+      <li>Write the price in the form below.</li>
+    </ol>
+    <p class="small">Not every medicine is sold there. If you cannot find one, write "not listed" and keep getting it where you do now.</p>
+
+    <h3>My medicine price list</h3>
+    <div class="medform">
+      <div class="full"><label for="mName">Medicine name and strength</label><input id="mName" type="text" placeholder="Example: atorvastatin 20 mg"></div>
+      <div><label for="mQty">How many pills</label><input id="mQty" type="text" placeholder="Example: 90"></div>
+      <div><label for="mNow">What I pay now ($)</label><input id="mNow" type="number" min="0" step="0.01" placeholder="Example: 12.00"></div>
+      <div><label for="mCp">Cost Plus price ($)</label><input id="mCp" type="number" min="0" step="0.01" placeholder="Leave blank if not listed"></div>
+    </div>
+    <button class="btn" type="button" id="addMed">Add to my list</button>
+    <div id="medTableWrap"></div>
+    <p class="small">The list only shows the difference in price. Before switching anything, check Step 3 with your insurance plan.</p>
+    <button class="btn done-btn" type="button" data-done>I compared my prices, mark this step done</button>
+  </div>
+</section>
+
+<!-- STEP 3 -->
+<section class="step" data-step="3">
+  <button class="head" type="button"><span class="num">3</span><h2>Call your insurance plan (if you have one)<small>About 15 minutes on the phone</small></h2><span class="chev">&#9656;</span></button>
+  <div class="body">
+    <p>Use the phone number on the back of your insurance or drug plan card. If you do not have insurance, you can skip this step.</p>
+    <h3>What to say</h3>
+    <div class="script">"Hi, my name is ____. I would like to know if <strong>Mark Cuban Cost Plus Drug Company</strong> is an <strong>in-network pharmacy</strong> for my prescription plan."</div>
+    <h3>Then ask</h3>
+    <ul class="check">
+      <li><label><input type="checkbox" data-key="q1"> If I fill my prescriptions there, what would my copay be?</label></li>
+      <li><label><input type="checkbox" data-key="q2"> If I pay cash instead, does that count toward my deductible or out-of-pocket limit?</label></li>
+      <li><label><input type="checkbox" data-key="q3"> Do I need to do anything to switch to a mail-order pharmacy?</label></li>
+      <li><label><input type="checkbox" data-key="q4"> Can I get a reference number for this call?</label></li>
+    </ul>
+    <h3>My notes from the call</h3>
+    <p class="small">Write the date, the person's name, and what they told you.</p>
+    <textarea data-note="insNotes" placeholder="Example: Nov 12, spoke with Maria. Cost Plus is in network. Reference #12345."></textarea>
+    <button class="btn done-btn" type="button" data-done>I made the call, mark this step done</button>
+  </div>
+</section>
+
+<!-- STEP 4 -->
+<section class="step" data-step="4">
+  <button class="head" type="button"><span class="num">4</span><h2>Create your account<small>About 15 minutes at the computer or phone</small></h2><span class="chev">&#9656;</span></button>
+  <div class="body">
+    <p>Gather these things first. It makes sign-up much easier.</p>
+    <ul class="check">
+      <li><label><input type="checkbox" data-key="g1"> An email address you can check (they send updates there)</label></li>
+      <li><label><input type="checkbox" data-key="g2"> Your mailing address where medicines should be delivered</label></li>
+      <li><label><input type="checkbox" data-key="g3"> Your phone number and date of birth</label></li>
+      <li><label><input type="checkbox" data-key="g4"> Your insurance card, if you plan to use insurance</label></li>
+      <li><label><input type="checkbox" data-key="g5"> A list of your allergies</label></li>
+      <li><label><input type="checkbox" data-key="g6"> A credit or debit card for payment</label></li>
+      <li><label><input type="checkbox" data-key="g7"> Your doctor's name and office phone number</label></li>
+    </ul>
+    <a class="btn" href="https://costplusdrugs.com" target="_blank" rel="noopener">Go to costplusdrugs.com</a>
+    <h3>Then</h3>
+    <ol>
+      <li>Click the button to sign up or create an account.</li>
+      <li>Fill in your information. Go slowly, and double-check your address.</li>
+      <li>If you have insurance, add it now or later in your account settings.</li>
+      <li>Write your login email below. Keep your password somewhere safe, not on this page.</li>
+    </ol>
+    <div class="note"><strong>Family helpers:</strong> it is fine to sit beside your loved one and help. The account should be in the name of the person taking the medicine, with their own information.</div>
+    <label for="loginEmail" class="small"><strong>The email I used to sign up</strong></label>
+    <input type="text" id="loginEmail" data-note="loginEmail" placeholder="Example: myname@email.com">
+    <button class="btn done-btn" type="button" data-done>My account is set up, mark this step done</button>
+  </div>
+</section>
+
+<!-- STEP 5 -->
+<section class="step" data-step="5">
+  <button class="head" type="button"><span class="num">5</span><h2>Ask your doctor to send the prescription<small>One phone call or portal message</small></h2><span class="chev">&#9656;</span></button>
+  <div class="body">
+    <p>Cost Plus cannot fill anything until your doctor sends the prescription to them. Call the office, send a patient portal message, or ask at your next visit.</p>
+    <h3>What to say</h3>
+    <div class="script">"Please send my prescription for ____ electronically to <strong>Mark Cuban Cost Plus Drug Company</strong>. It is a mail-order pharmacy."</div>
+    <h3>Good questions to ask</h3>
+    <ul class="check">
+      <li><label><input type="checkbox" data-key="d1"> Is a 90-day supply right for me for this medicine?</label></li>
+      <li><label><input type="checkbox" data-key="d2"> Can you send all my regular medicines at the same time?</label></li>
+      <li><label><input type="checkbox" data-key="d3"> Did it go through? (Ask them to confirm it was sent.)</label></li>
+    </ul>
+    <div class="note">Do not stop or change any medicine because of price without talking with your doctor or pharmacist first.</div>
+    <textarea data-note="drNotes" placeholder="Example: Called Dr. Smith's office Nov 13. Nurse Ann sent 3 prescriptions."></textarea>
+    <button class="btn done-btn" type="button" data-done>Prescriptions were sent, mark this step done</button>
+  </div>
+</section>
+
+<!-- STEP 6 -->
+<section class="step" data-step="6">
+  <button class="head" type="button"><span class="num">6</span><h2>Check out and watch for your package<small>A few minutes, then a few days of waiting</small></h2><span class="chev">&#9656;</span></button>
+  <div class="body">
+    <ol>
+      <li>Watch your email. Cost Plus will let you know when they receive the prescription.</li>
+      <li>Log in to your account and review your order and the price.</li>
+      <li>If you added insurance, you will see your insurance price at checkout. Compare it with the cash price.</li>
+      <li>Pay and choose shipping.</li>
+      <li>Watch for your package in the mail.</li>
+    </ol>
+    <div class="note"><strong>Do not wait until your last pill.</strong> Mail takes time. Keep using your current pharmacy until your first order arrives safely. Start this process when you still have at least two to three weeks of medicine left.</div>
+    <h3>When the package arrives</h3>
+    <ul class="check">
+      <li><label><input type="checkbox" data-key="p1"> Check that your name is on every bottle</label></li>
+      <li><label><input type="checkbox" data-key="p2"> Check the medicine name and strength match what you take</label></li>
+      <li><label><input type="checkbox" data-key="p3"> If pills look different from before, call the pharmacy listed on the bottle to ask</label></li>
+      <li><label><input type="checkbox" data-key="p4"> Mark your calendar to reorder before you run low</label></li>
+    </ul>
+    <button class="btn done-btn" type="button" data-done>My medicine arrived, mark this step done</button>
+  </div>
+</section>
+
+<div class="progress">
+  <strong>Keep a copy</strong>
+  <p class="small" style="margin:6px 0 0">Copy your progress, medicine list, and notes, then paste them into an email to yourself or a family member.</p>
+  <button class="btn" type="button" id="copyAll">Copy my checklist and notes</button>
+  <button class="btn secondary" type="button" id="resetAll">Start over</button>
+  <textarea id="copyBox" readonly></textarea>
+  <div id="resetConfirm" style="display:none" class="note">Erase all checkmarks, medicines, and notes on this device?
+    <br><button class="btn" type="button" id="resetYes">Yes, erase</button><button class="btn secondary" type="button" id="resetNo">No, keep them</button></div>
+</div>
+
+<footer>
+  <h2>Need a hand with any of this?</h2>
+  <p>This guide is free to use anywhere in the U.S. If you or someone you love would like one-on-one help sorting out medicines, insurance, or care, a patient advocate can walk with you.</p>
+  <p><strong>Rachel Nash, MRC, BCPA</strong><br>Nash Patient Advocacy &amp; Consulting<br>Phone: 704-254-1407<br><a href="https://www.nashadvocacy.com/contact-nash-patient-advocacy" target="_blank" rel="noopener">nashadvocacy.com/contact-nash-patient-advocacy</a></p>
+  <p class="small">This guide is for education only. It is not medical, legal, or financial advice, and it is not affiliated with or endorsed by Mark Cuban Cost Plus Drug Company. Prices, insurance rules, and website steps can change. Always confirm with your doctor, pharmacist, and insurance plan before changing how you get your medicines.</p>
+</footer>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  var KEY="nash-costplus-guide-v1";
+  var state={done:{},checks:{},notes:{},meds:[],size:20,open:1};
+  try{var s=JSON.parse(localStorage.getItem(KEY)||"null"); if(s) state=Object.assign(state,s);}catch(e){}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
+  function toast(t){var el=document.getElementById("toast");el.textContent=t;el.style.display="block";clearTimeout(toast._t);toast._t=setTimeout(function(){el.style.display="none";},2500);}
+
+  document.body.style.fontSize=state.size+"px";
+  document.querySelectorAll("[data-size]").forEach(function(b){b.addEventListener("click",function(){state.size=+b.dataset.size;document.body.style.fontSize=state.size+"px";save();});});
+
+  var steps=[].slice.call(document.querySelectorAll(".step"));
+  function render(){
+    var n=0;
+    steps.forEach(function(s){var id=s.dataset.step;var d=!!state.done[id];if(d)n++;
+      s.classList.toggle("done",d);s.classList.toggle("open",state.open==id);
+      var b=s.querySelector("[data-done]");b.textContent=d?"Done. Tap to undo":b.dataset.label;});
+    document.getElementById("progText").textContent=n+" of 6 steps done"+(n===6?". Well done!":"");
+    document.getElementById("progBar").style.width=(n/6*100)+"%";
+  }
+  steps.forEach(function(s){
+    var id=s.dataset.step;var b=s.querySelector("[data-done]");b.dataset.label=b.textContent;
+    s.querySelector(".head").addEventListener("click",function(){state.open=(state.open==id)?0:+id;save();render();});
+    b.addEventListener("click",function(){
+      if(state.done[id]){delete state.done[id];}else{state.done[id]=true;state.open=+id+1;
+        var next=document.querySelector('.step[data-step="'+(+id+1)+'"]');if(next)setTimeout(function(){next.scrollIntoView({behavior:"smooth",block:"start"});},50);}
+      save();render();});
+  });
+
+  document.querySelectorAll("[data-key]").forEach(function(c){c.checked=!!state.checks[c.dataset.key];
+    c.addEventListener("change",function(){state.checks[c.dataset.key]=c.checked;save();});});
+  document.querySelectorAll("[data-note]").forEach(function(t){t.value=state.notes[t.dataset.note]||"";
+    t.addEventListener("input",function(){state.notes[t.dataset.note]=t.value;save();});});
+
+  function money(v){return "$"+Number(v).toFixed(2);}
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function diffText(m){
+    if(m.cp===""||m.cp==null) return {t:"Not listed at Cost Plus",c:""};
+    if(m.now===""||m.now==null) return {t:"Cost Plus: "+money(m.cp),c:""};
+    var d=m.now-m.cp;
+    if(Math.abs(d)<0.005) return {t:"About the same",c:""};
+    return d>0?{t:"Cost Plus is "+money(d)+" less",c:"diff-low"}:{t:"Cost Plus is "+money(-d)+" more",c:"diff-high"};
+  }
+  function renderMeds(){
+    var w=document.getElementById("medTableWrap");
+    if(!state.meds.length){w.innerHTML='<p class="small">No medicines added yet.</p>';return;}
+    var h='<table><tr><th>Medicine</th><th>Pills</th><th>Now</th><th>Cost Plus</th><th>Difference</th><th></th></tr>';
+    state.meds.forEach(function(m,i){var d=diffText(m);
+      h+='<tr><td>'+esc(m.name)+'</td><td>'+esc(m.qty)+'</td><td>'+(m.now!==""?money(m.now):"")+'</td><td>'+(m.cp!==""?money(m.cp):"Not listed")+'</td><td class="'+d.c+'">'+d.t+'</td><td><button class="rm" data-i="'+i+'" type="button">Remove</button></td></tr>';});
+    w.innerHTML=h+'</table>';
+    w.querySelectorAll(".rm").forEach(function(b){b.addEventListener("click",function(){state.meds.splice(+b.dataset.i,1);save();renderMeds();});});
+  }
+  document.getElementById("addMed").addEventListener("click",function(){
+    var n=document.getElementById("mName"),q=document.getElementById("mQty"),a=document.getElementById("mNow"),c=document.getElementById("mCp");
+    if(!n.value.trim()){toast("Please type the medicine name first.");n.focus();return;}
+    state.meds.push({name:n.value.trim(),qty:q.value.trim(),now:a.value===""?"":+a.value,cp:c.value===""?"":+c.value});
+    n.value=q.value=a.value=c.value="";save();renderMeds();toast("Added to your list.");n.focus();
+  });
+
+  var labels={q1:"Asked: copay at Cost Plus",q2:"Asked: does cash count toward deductible/out-of-pocket",q3:"Asked: steps to switch to mail order",q4:"Got a call reference number",
+    g1:"Email address",g2:"Mailing address",g3:"Phone and date of birth",g4:"Insurance card",g5:"Allergy list",g6:"Payment card",g7:"Doctor's name and phone",
+    d1:"Asked about 90-day supply",d2:"Asked to send all regular medicines",d3:"Confirmed prescription was sent",
+    p1:"Checked name on bottles",p2:"Checked medicine and strength",p3:"Called about pills that look different",p4:"Set reorder reminder"};
+  var titles=["","Learn what Cost Plus Drugs is","Compare prices","Call insurance plan","Create account","Doctor sends prescription","Check out and receive"];
+  function summary(){
+    var L=["GETTING STARTED WITH COST PLUS DRUGS: MY PROGRESS",""];
+    for(var i=1;i<=6;i++) L.push((state.done[i]?"[x] ":"[ ] ")+"Step "+i+": "+titles[i]);
+    L.push("","MY MEDICINES");
+    if(!state.meds.length)L.push("(none added)");
+    state.meds.forEach(function(m){L.push("- "+m.name+(m.qty?" ("+m.qty+" pills)":"")+": now "+(m.now!==""?money(m.now):"?")+", Cost Plus "+(m.cp!==""?money(m.cp):"not listed")+". "+diffText(m).t);});
+    var done=Object.keys(state.checks).filter(function(k){return state.checks[k];});
+    if(done.length){L.push("","CHECKED OFF");done.forEach(function(k){L.push("- "+(labels[k]||k));});}
+    if(state.notes.insNotes)L.push("","INSURANCE CALL NOTES",state.notes.insNotes);
+    if(state.notes.drNotes)L.push("","DOCTOR NOTES",state.notes.drNotes);
+    if(state.notes.loginEmail)L.push("","Cost Plus login email: "+state.notes.loginEmail);
+    L.push("","Questions? Nash Patient Advocacy & Consulting, 704-254-1407");
+    return L.join("\n");
+  }
+  document.getElementById("copyAll").addEventListener("click",function(){
+    var t=summary(),box=document.getElementById("copyBox");
+    try{navigator.clipboard.writeText(t).then(function(){toast("Copied. Paste it into an email.");},function(){box.style.display="block";box.value=t;box.select();toast("Select the text below and copy it.");});}
+    catch(e){box.style.display="block";box.value=t;box.select();toast("Select the text below and copy it.");}
+  });
+  document.getElementById("resetAll").addEventListener("click",function(){document.getElementById("resetConfirm").style.display="block";});
+  document.getElementById("resetNo").addEventListener("click",function(){document.getElementById("resetConfirm").style.display="none";});
+  document.getElementById("resetYes").addEventListener("click",function(){
+    state={done:{},checks:{},notes:{},meds:[],size:state.size,open:1};save();
+    document.querySelectorAll("[data-key]").forEach(function(c){c.checked=false;});
+    document.querySelectorAll("[data-note]").forEach(function(t){t.value="";});
+    document.getElementById("resetConfirm").style.display="none";document.getElementById("copyBox").style.display="none";
+    renderMeds();render();toast("Cleared.");
+  });
+
+  renderMeds();render();
+})();
+</script>
+</body>
+</html>
